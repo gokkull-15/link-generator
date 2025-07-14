@@ -421,6 +421,179 @@ app.post('/api/schedule-google-meet', async (req, res) => {
   }
 })
 
+// Bulk schedule webinars from Excel data
+app.post('/api/bulk-schedule-webinars', async (req, res) => {
+  try {
+    const { webinars } = req.body
+
+    if (!webinars || !Array.isArray(webinars) || webinars.length === 0) {
+      return res.status(400).json({ error: 'Webinars array is required' })
+    }
+
+    console.log(`Processing ${webinars.length} webinars for bulk scheduling...`)
+
+    const results = []
+    const errors = []
+
+    // Process each webinar
+    for (let i = 0; i < webinars.length; i++) {
+      const webinar = webinars[i]
+      
+      try {
+        console.log(`Processing webinar ${i + 1}/${webinars.length}: ${webinar.name}`)
+
+        // Validate required fields
+        const requiredFields = ['name', 'date', 'time', 'presenter.name', 'presenter.email', 'attendee.name', 'attendee.email']
+        const missingFields = []
+        
+        requiredFields.forEach(field => {
+          const fieldParts = field.split('.')
+          let value = webinar
+          for (const part of fieldParts) {
+            value = value?.[part]
+          }
+          if (!value || value.trim() === '') {
+            missingFields.push(field)
+          }
+        })
+
+        if (missingFields.length > 0) {
+          throw new Error(`Missing required fields: ${missingFields.join(', ')}`)
+        }
+
+        // Validate email formats
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(webinar.presenter.email)) {
+          throw new Error('Invalid presenter email format')
+        }
+        if (!emailRegex.test(webinar.attendee.email)) {
+          throw new Error('Invalid attendee email format')
+        }
+
+        // Create Google Meet event
+        const meetData = await createGoogleMeetEvent(webinar)
+        
+        // Merge the meeting data with the original webinar data
+        const enrichedWebinar = {
+          ...webinar,
+          ...meetData
+        }
+        
+        // Send email notifications
+        const emailResults = await sendBulkNotifications(enrichedWebinar)
+
+        results.push({
+          webinarId: webinar.webinarId || webinar.id,
+          name: webinar.name,
+          success: true,
+          meetData,
+          emailResults,
+          message: 'Webinar scheduled and notifications sent successfully'
+        })
+
+        console.log(`✅ Successfully processed: ${webinar.name}`)
+
+        // Add a small delay to avoid rate limiting
+        if (i < webinars.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 1000))
+        }
+
+      } catch (error) {
+        console.error(`❌ Error processing webinar ${webinar.name}:`, error.message)
+        
+        errors.push({
+          webinarId: webinar.webinarId || webinar.id,
+          name: webinar.name,
+          success: false,
+          error: error.message
+        })
+      }
+    }
+
+    // Prepare response
+    const response = {
+      success: results.length > 0,
+      message: `Processed ${webinars.length} webinars. ${results.length} successful, ${errors.length} failed.`,
+      summary: {
+        total: webinars.length,
+        successful: results.length,
+        failed: errors.length
+      },
+      results,
+      errors
+    }
+
+    console.log('Bulk scheduling completed:', response.summary)
+
+    res.json(response)
+
+  } catch (error) {
+    console.error('Bulk scheduling error:', error)
+    res.status(500).json({
+      error: 'Failed to process bulk webinar scheduling',
+      details: error.message
+    })
+  }
+})
+
+// Helper function to send notifications for bulk scheduling
+const sendBulkNotifications = async (webinar) => {
+  try {
+    // Validate required email configuration
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      throw new Error('Email configuration missing')
+    }
+
+    const transporter = createTransporter()
+
+    // Verify transporter configuration
+    await transporter.verify()
+
+    // Prepare email options for presenter
+    const presenterMailOptions = {
+      from: `"${process.env.EMAIL_FROM_NAME || 'Webinar Management'}" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+      to: webinar.presenter.email,
+      subject: `🎯 Host Confirmation: ${webinar.name}`,
+      html: generatePresenterEmailBody(webinar)
+    }
+
+    // Prepare email options for attendee
+    const attendeeMailOptions = {
+      from: `"${process.env.EMAIL_FROM_NAME || 'Webinar Management'}" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
+      to: webinar.attendee.email,
+      subject: `🎓 Webinar Invitation: ${webinar.name}`,
+      html: generateAttendeeEmailBody(webinar)
+    }
+
+    // Send emails
+    const [presenterResult, attendeeResult] = await Promise.all([
+      transporter.sendMail(presenterMailOptions),
+      transporter.sendMail(attendeeMailOptions)
+    ])
+
+    return {
+      presenterEmailData: {
+        to: webinar.presenter.email,
+        messageId: presenterResult.messageId,
+        sent: true,
+        timestamp: new Date().toISOString(),
+        type: 'presenter'
+      },
+      attendeeEmailData: {
+        to: webinar.attendee.email,
+        messageId: attendeeResult.messageId,
+        sent: true,
+        timestamp: new Date().toISOString(),
+        type: 'attendee'
+      }
+    }
+
+  } catch (error) {
+    console.error('Bulk email sending error:', error)
+    throw new Error(`Failed to send email notifications: ${error.message}`)
+  }
+}
+
 // Google OAuth routes
 app.get('/auth/google', (req, res) => {
   const authUrl = oauth2Client.generateAuthUrl({

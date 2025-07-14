@@ -111,65 +111,15 @@ const WebinarTable = ({
                 </td>
 
                 <td className="schedule-links">
-                  {/* COMMENTED OUT - Scheduling functionality
-                  <div className="platform-buttons">
-                    <button
-                      onClick={() => onSchedule(webinar, 'zoom')}
-                      disabled={loading}
-                      className="btn btn-zoom"
-                    >
-                      <Video size={16} />
-                      Schedule Zoom
-                    </button>
-                    <button
-                      onClick={() => onSchedule(webinar, 'google-meet')}
-                      disabled={loading}
-                      className="btn btn-google"
-                      title={!isGoogleAuth ? 'Connect Google account for real Meet links' : 'Create real Google Meet link'}
-                    >
-                      <Video size={16} />
-                      {isGoogleAuth ? 'Schedule Meet' : 'Schedule Meet (Demo)'}
-                    </button>
-                  </div>
-                  
-                  {!isGoogleAuth && (
-                    <div className="auth-warning">
-                      <small>💡 Connect Google for real scheduled links</small>
-                    </div>
-                  )}
-                  */}
-
-                  {/* EMAIL ONLY MODE - Show message */}
-                  <div className="email-only-message">
-                    <h4>📧 Email Notifications Only</h4>
-                    <p>
-                      This simplified version focuses on Nodemailer email
-                      notifications with Google Calendar invites.
-                    </p>
-                    <p>
-                      <strong>
-                        Scheduling functionality is commented out.
-                      </strong>
-                    </p>
-                  </div>
-
-                  {webinar.presenterLink && (
+                  {webinar.status === 'scheduled' && webinar.presenterLink ? (
                     <div className="links">
                       <div className="platform-info">
-                        <span
-                          className={`platform-badge ${webinar.platform?.toLowerCase()}`}
-                        >
-                          {webinar.platform}
+                        <span className="platform-badge google-meet">
+                          Google Meet
                         </span>
-                        {webinar.status && (
-                          <span
-                            className={`status-badge ${
-                              webinar.status.includes("demo") ? "demo" : "real"
-                            }`}
-                          >
-                            {webinar.status.includes("demo") ? "Demo" : "Real"}
-                          </span>
-                        )}
+                        <span className="status-badge real">
+                          ✅ Scheduled
+                        </span>
                       </div>
                       <div className="link-item presenter-link">
                         <strong>🎤 Host Link:</strong>
@@ -195,7 +145,7 @@ const WebinarTable = ({
                       </div>
                       {webinar.htmlLink && (
                         <div className="link-item calendar-link">
-                          <strong>📅 Calendar Event:</strong>
+                          <strong>� Calendar Event:</strong>
                           <a
                             href={webinar.htmlLink}
                             target="_blank"
@@ -206,11 +156,26 @@ const WebinarTable = ({
                           </a>
                         </div>
                       )}
-                      <div className="platform-badge">
-                        Platform:{" "}
-                        <span className="platform-name">
-                          {webinar.platform}
-                        </span>
+                      {webinar.emailSent && (
+                        <div className="email-status">
+                          � Notifications sent
+                        </div>
+                      )}
+                    </div>
+                  ) : webinar.status === 'failed' ? (
+                    <div className="error-info">
+                      <div className="error-message">❌ Failed to schedule</div>
+                      {webinar.error && (
+                        <div className="error-details">{webinar.error}</div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="pending-info">
+                      <div className="pending-message">
+                        ⏳ Ready for bulk scheduling
+                      </div>
+                      <div className="pending-description">
+                        Use "Schedule All" to create Google Meet and send notifications
                       </div>
                     </div>
                   )}

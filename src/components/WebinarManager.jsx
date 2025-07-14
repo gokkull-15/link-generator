@@ -165,6 +165,83 @@ const WebinarManager = () => {
     }
   };
 
+  const handleBulkSchedule = async () => {
+    if (webinars.length === 0) {
+      setMessage("No webinars to schedule. Please upload an Excel file first.");
+      return;
+    }
+
+    setLoading(true);
+    setMessage(`Starting bulk scheduling for ${webinars.length} webinars...`);
+
+    try {
+      const response = await fetch('http://localhost:3001/api/bulk-schedule-webinars', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ webinars })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to schedule webinars');
+      }
+
+      const result = await response.json();
+
+      // Update webinars with the results
+      const updatedWebinars = webinars.map(webinar => {
+        const successResult = result.results?.find(r => 
+          r.webinarId === (webinar.webinarId || webinar.id)
+        );
+        const errorResult = result.errors?.find(e => 
+          e.webinarId === (webinar.webinarId || webinar.id)
+        );
+
+        if (successResult) {
+          return {
+            ...webinar,
+            status: 'scheduled',
+            platform: 'Google Meet',
+            presenterLink: successResult.meetData.presenterLink,
+            attendeeLink: successResult.meetData.attendeeLink,
+            meetingId: successResult.meetData.meetingId,
+            htmlLink: successResult.meetData.htmlLink,
+            emailSent: true
+          };
+        } else if (errorResult) {
+          return {
+            ...webinar,
+            status: 'failed',
+            error: errorResult.error
+          };
+        }
+        return webinar;
+      });
+
+      setWebinars(updatedWebinars);
+
+      // Show detailed results
+      const { successful, failed, total } = result.summary;
+      setMessage(
+        `✅ Bulk scheduling completed!\n` +
+        `📊 Results: ${successful}/${total} successful, ${failed} failed\n` +
+        `📧 Email notifications sent to all successful meetings\n` +
+        `🔗 Google Meet links generated and shared`
+      );
+
+      console.log('Bulk scheduling results:', result);
+
+    } catch (error) {
+      console.error('Bulk scheduling error:', error);
+      setMessage(`❌ Bulk scheduling failed: ${error.message}`);
+    } finally {
+      setLoading(false);
+      setTimeout(() => setMessage(""), 10000); // Longer timeout for detailed message
+    }
+  };
+
   return (
     <div className="webinar-manager">
       {message && (
@@ -290,20 +367,63 @@ const WebinarManager = () => {
         <section className="upload-section">
           <h2>Upload Webinar Details</h2>
           <ExcelUploader onUpload={handleExcelUpload} />
+          
+          {webinars.length > 0 && (
+            <div className="bulk-actions">
+              <div className="bulk-info">
+                <h3>📊 Loaded {webinars.length} webinars from Excel</h3>
+                <p>Ready to schedule Google Meet events and send notifications automatically</p>
+              </div>
+              
+              <div className="bulk-controls">
+                <button
+                  onClick={handleBulkSchedule}
+                  className="btn btn-primary btn-large"
+                  disabled={loading || !googleAuthStatus.canCreateMeetings}
+                >
+                  {loading ? "🔄 Scheduling..." : "🚀 Schedule All & Send Notifications"}
+                </button>
+                
+                {!googleAuthStatus.canCreateMeetings && (
+                  <p className="warning">
+                    ⚠️ Google authentication required for Meet creation
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
         </section>
       )}
 
       {webinars.length > 0 && (
         <section className="webinars-section">
           <h2>
-            Webinars ({webinars.length}) - Schedule Google Meet & Send
-            Notifications
+            📋 Webinars ({webinars.length})
           </h2>
+          
+          <div className="status-summary">
+            {webinars.some(w => w.status === 'scheduled') && (
+              <div className="status-item success">
+                ✅ {webinars.filter(w => w.status === 'scheduled').length} Scheduled
+              </div>
+            )}
+            {webinars.some(w => w.status === 'failed') && (
+              <div className="status-item error">
+                ❌ {webinars.filter(w => w.status === 'failed').length} Failed
+              </div>
+            )}
+            {webinars.some(w => w.status === 'pending' || !w.status) && (
+              <div className="status-item pending">
+                ⏳ {webinars.filter(w => w.status === 'pending' || !w.status).length} Pending
+              </div>
+            )}
+          </div>
+          
           <WebinarTable
             webinars={webinars}
             onSendNotifications={handleSendNotifications}
             loading={loading}
-            emailOnly={true}
+            emailOnly={false}
           />
         </section>
       )}
