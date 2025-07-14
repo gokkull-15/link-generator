@@ -1,0 +1,383 @@
+/* WebinarTable.css */
+.webinar-table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table-wrapper {
+  min-width: 1200px;
+}
+
+.webinar-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.webinar-table th {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.webinar-table td {
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  vertical-align: top;
+}
+
+.webinar-table tbody tr:hover {
+  background: rgba(99, 102, 241, 0.02);
+}
+
+.webinar-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Webinar Details Column */
+.webinar-details {
+  min-width: 250px;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
+}
+
+.detail-item strong {
+  font-size: 1rem;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.detail-item svg {
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.detail-item span {
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+/* Contact Info Columns */
+.contact-info {
+  min-width: 200px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.contact-item:last-child {
+  margin-bottom: 0;
+}
+
+.contact-item svg {
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.contact-item span {
+  color: #4b5563;
+  font-size: 0.875rem;
+  word-break: break-all;
+}
+
+/* Schedule & Links Column */
+.schedule-links {
+  min-width: 300px;
+}
+
+.platform-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.platform-buttons .btn {
+  flex: 1;
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.links {
+  background: #f8fafc;
+  border-radius: 6px;
+  padding: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.link-item {
+  margin-bottom: 0.75rem;
+}
+
+.link-item:last-child {
+  margin-bottom: 0;
+}
+
+.link-item strong {
+  display: block;
+  font-size: 0.75rem;
+  color: #4b5563;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.link-item a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.link-item a:hover {
+  background: #dbeafe;
+}
+
+.platform-badge {
+  background: #e0e7ff;
+  color: #3730a3;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.platform-name {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Actions Column */
+.actions {
+  min-width: 150px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.action-buttons .btn {
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Authentication and Platform Status */
+.auth-warning {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: #fef3cd;
+  border: 1px solid #fbbf24;
+  border-radius: 4px;
+  color: #92400e;
+  font-size: 0.8rem;
+}
+
+.platform-info {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+.platform-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.platform-badge.zoom {
+  background: #e0f2fe;
+  color: #0277bd;
+}
+
+.platform-badge.google-meet {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.demo {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.real {
+  background: #d1edff;
+  color: #0c4a6e;
+}
+
+/* Link styling improvements */
+.presenter-link {
+  background: #fef7ff;
+  border-left: 3px solid #a855f7;
+  padding-left: 0.75rem;
+}
+
+.attendee-link {
+  background: #f0f9ff;
+  border-left: 3px solid #0ea5e9;
+  padding-left: 0.75rem;
+}
+
+.calendar-link {
+  background: #f0fdf4;
+  border-left: 3px solid #22c55e;
+  padding-left: 0.75rem;
+}
+
+/* Action buttons improvements */
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-email {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: center;
+  min-width: 200px;
+}
+
+.btn-email:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.btn-email:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.no-links-message {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: #f9fafb;
+  border-radius: 4px;
+  border: 1px dashed #d1d5db;
+}
+
+/* Email Only Mode Styling */
+.email-only-message {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.email-only-message h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.email-only-message p {
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.email-only-message strong {
+  color: #fbbf24;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .webinar-table-container {
+    overflow-x: auto;
+  }
+  
+  .webinar-table th,
+  .webinar-table td {
+    padding: 0.75rem 0.5rem;
+  }
+  
+  .platform-buttons {
+    flex-direction: column;
+  }
+  
+  .action-buttons .btn {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* Loading State */
+.btn:disabled {
+  position: relative;
+  color: transparent !important;
+}
+
+.btn:disabled::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

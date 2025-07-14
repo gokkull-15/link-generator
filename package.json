@@ -7,11 +7,25 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node -r dotenv/config server.cjs dotenv_config_path=.env.server",
+    "dev:full": "concurrently \"npm run server\" \"npm run dev\""
   },
   "dependencies": {
+    "concurrently": "^9.2.0",
+    "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "google-auth-library": "^10.1.0",
+    "googleapis": "^152.0.0",
+    "lucide-react": "^0.525.0",
+    "nodemailer": "^7.0.5",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-dropzone": "^14.3.8",
+    "uuid": "^11.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

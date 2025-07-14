@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import WebinarManager from "./components/WebinarManager";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+    <div className="app">
+      <header className="app-header">
+        <h1>🎥 Google Meet Webinar Manager</h1>
         <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
+          <strong>Create Google Meet Events + Email Notifications</strong>
         </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+        <p>
+          Create individual meetings or upload Excel files to schedule multiple
+          webinars with real Google Meet integration
+        </p>
+        <div className="focus-note">
+          <small>
+            🎯 <strong>FEATURES:</strong> Create Google Meet events, send
+            professional email invitations, and manage webinars with calendar
+            integration.
+          </small>
+        </div>
+      </header>
+      <main className="app-main">
+        <WebinarManager />
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;

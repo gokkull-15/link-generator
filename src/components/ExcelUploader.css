@@ -1,0 +1,111 @@
+/* ExcelUploader.css */
+.excel-uploader {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.upload-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-sample {
+  background: #8b5cf6;
+  color: white;
+}
+
+.dropzone {
+  border: 2px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(249, 250, 251, 0.8);
+}
+
+.dropzone:hover, .dropzone.active {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.05);
+}
+
+.dropzone.active {
+  border-color: #4f46e5;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dropzone-content svg {
+  color: #6b7280;
+  transition: color 0.3s ease;
+}
+
+.dropzone:hover svg, .dropzone.active svg {
+  color: #6366f1;
+}
+
+.dropzone p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.dropzone small {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.format-info {
+  background: rgba(243, 244, 246, 0.8);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.format-info h4 {
+  margin: 0 0 1rem 0;
+  color: #1f2937;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.format-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.format-columns ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.format-columns li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.format-columns li:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .dropzone {
+    padding: 2rem 1rem;
+  }
+  
+  .format-columns {
+    grid-template-columns: 1fr;
+  }
+}
